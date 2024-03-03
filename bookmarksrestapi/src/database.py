@@ -16,3 +16,17 @@ class User(db.Model):
 
     def __repr__(self) -> str:
         return "User>>> {self.username}"
+
+
+class Bookmark(db.Model):
+    id=db.column(db.Integer, primary_key=True)
+    body=db.column(db.Text, nullable=False)
+    url=db.column(db.Text, nullable=False)
+    short_url=db.column(db.String(3), nullable=False)
+    visits=db.column(db.Integer, default=0)
+
+    user_id=db.column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    user=db.relationship("User", backref=db.backref("bookmarks", lazy=True))
+
+    def __repr__(self) -> str:
+        return "Bookmark>>> {self.title}"

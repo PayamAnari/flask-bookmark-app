@@ -11,3 +11,16 @@ def create_app(test_config=None):
         app.config.from_mapping(
              SECRET_KEY="dev"
         )
+    else:
+        app.config.from_mapping(test_config)
+
+
+    @app.get("/")
+    def index():
+        return "Hello, world!"
+    
+    @app.get("/hello")
+    def say_hello():
+        return {"message": "Hello, world!"}
+        
+    return app

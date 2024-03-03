@@ -1,6 +1,9 @@
 from enum import unique
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
+import string
+from sqlalchemy.orm import backref
+import random
 
 
 db = SQLAlchemy()
@@ -28,6 +31,19 @@ class Bookmark(db.Model):
     user_id=db.column(db.Integer, db.ForeignKey("user.id"), nullable=False)
     created_at=db.column(db.DateTime, default=datetime.now())
     updated_at=db.column(db.DateTime, onupdate=datetime.now())
+
+    
+    def generate_short_characters(self):
+        characters=string.digits+string.ascii_letters
+        picked_chars=''.join(random.choices(characters, k=3))
+        
+        link=self.query.filter_by(short_url=picked_chars).first()
+
+        if link:
+            pass
+
+        else:
+            return picked_chars
 
     
     def __init__(self,**kwargs):

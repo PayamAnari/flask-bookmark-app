@@ -3,6 +3,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from src.constants.http_status_codes import HTTP_400_BAD_REQUEST, HTTP_409_CONFLICT, HTTP_201_CREATED
 import validators
 from src.database import User, db
+from flask_jwt_extended import create_access_token, create_refresh_token
 
 auth = Blueprint("auth", __name__, url_prefix="/api/v1/auth")
 
@@ -48,6 +49,16 @@ def register():
     }),HTTP_201_CREATED
 
 
+@auth.post("/login")
+def login():
+    email = request.json.get('email')
+    password = request.json.get('password')
+    user = User.query.filter_by(email=email).first()
+    if user:
+        is_pass_correct = check_password_hash(user.password, password)
+
+        if is_pass_correct:
+            
 
 @auth.get("/me")
 def me():

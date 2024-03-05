@@ -88,12 +88,13 @@ def me():
     }), HTTP_200_OK
     
 
-@auth.post("/token/refresh")
+@auth.get("/token/refresh")
 @jwt_required(refresh = True)
 def refresh_users_token():
     identity = get_jwt_identity()
     access = create_access_token(identity=identity)
     
     return jsonify({
+        "message": "Refresh token created successfully",
         "access": access
     }), HTTP_200_OK

@@ -81,4 +81,13 @@ def me():
     user_id = get_jwt_identity()
 
     user = User.query.filter_by(id = user_id).first()
-    return {"user": "me"}
+
+    return jsonify({
+            "username": user.username,
+            "email": user.email
+    }), HTTP_200_OK
+    
+
+@auth.post("/token/refresh")
+def refresh_users_token():
+    

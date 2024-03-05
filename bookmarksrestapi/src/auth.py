@@ -89,5 +89,11 @@ def me():
     
 
 @auth.post("/token/refresh")
+@jwt_required(refresh = True)
 def refresh_users_token():
+    identity = get_jwt_identity()
+    access = create_access_token(identity=identity)
     
+    return jsonify({
+        "access": access
+    }), HTTP_200_OK

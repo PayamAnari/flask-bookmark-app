@@ -1,6 +1,6 @@
 from flask import Blueprint, request,jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
-from src.constants.http_status_codes import HTTP_400_BAD_REQUEST, HTTP_409_CONFLICT, HTTP_201_CREATED
+from src.constants.http_status_codes import HTTP_400_BAD_REQUEST, HTTP_409_CONFLICT, HTTP_201_CREATED, HTTP_401_UNAUTHORIZED, HTTP_200_OK
 import validators
 from src.database import User, db
 from flask_jwt_extended import create_access_token, create_refresh_token
@@ -51,14 +51,29 @@ def register():
 
 @auth.post("/login")
 def login():
-    email = request.json.get('email')
-    password = request.json.get('password')
+    email = request.json.get('email', '')
+    password = request.json.get('password', '')
+
     user = User.query.filter_by(email=email).first()
+
     if user:
         is_pass_correct = check_password_hash(user.password, password)
 
         if is_pass_correct:
-            
+            refresh = create_refresh_token(identity=user.id)
+            access = create_access_token(identity=user.id)
+
+            return jsonify({
+                "message": "User logged in successfully",
+                "user": {
+                    "refresh": refresh,
+                    "access": access,
+                    "username": user.username,
+                    "email": user.email
+                }
+            }), HTTP_200_OK
+
+    return jsonify({"error": "Wrong credentials"}), HTTP_401_UNAUTHORIZED
 
 @auth.get("/me")
 def me():

@@ -1,7 +1,7 @@
 from flask import Blueprint, request
 from flask.json import jsonify
 import validators
-from src.constants.http_status_codes import HTTP_400_BAD_REQUEST, HTTP_409_CONFLICT, HTTP_201_CREATED
+from src.constants.http_status_codes import HTTP_400_BAD_REQUEST, HTTP_409_CONFLICT, HTTP_201_CREATED, HTTP_200_OK
 from src.database import Bookmark, db
 from flask_jwt_extended import  get_jwt_identity
 from flask_jwt_extended.view_decorators import jwt_required
@@ -51,7 +51,11 @@ def bookmarks():
     else:
 
         bookmarks = Bookmark.query.filter_by(user_id = current_user).all()
-        return jsonify([{
+        
+        data = []
+
+        for bookmark in bookmarks:
+            data.append({
             "id": bookmark.id,
             "url": bookmark.url,
             "short_url" : bookmark.short_url,
@@ -59,4 +63,7 @@ def bookmarks():
             "body": bookmark.body,
             "created_at": bookmark.created_at,
             "updated_at": bookmark.updated_at
-        } for bookmark in bookmarks])
+        })
+
+
+        return jsonify({"data":data}), HTTP_200_OK

@@ -147,3 +147,5 @@ def delete_bookmark(id):
     db.session.commit()
 
     return jsonify({'message': 'Bookmark is successfully deleted'}), HTTP_200_OK
+
+

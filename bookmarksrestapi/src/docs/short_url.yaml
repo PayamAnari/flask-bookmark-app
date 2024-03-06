@@ -1,4 +1,4 @@
-Redirects to a Real URL
+Redirect to a short url
 ---
 tags:
   - Bookmarks
@@ -6,11 +6,10 @@ parameters:
   - in: path
     name: short_url
     required: true
-    
-
 
 responses:
   302:
-  description: Redirects to the real URL
+    description: Redirects to the original link
+
   404:
-  description: The short URL does not exist
+    description: Record was not found

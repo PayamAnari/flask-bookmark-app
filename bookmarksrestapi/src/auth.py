@@ -4,6 +4,7 @@ from src.constants.http_status_codes import HTTP_400_BAD_REQUEST, HTTP_409_CONFL
 import validators
 from src.database import User, db
 from flask_jwt_extended import jwt_required, create_access_token, create_refresh_token, get_jwt_identity
+from flasgger import swag_from
 
 auth = Blueprint("auth", __name__, url_prefix="/api/v1/auth")
 
@@ -50,6 +51,7 @@ def register():
 
 
 @auth.post("/login")
+@swag_from('./docs/auth/login.yaml')
 def login():
     email = request.json.get('email', '')
     password = request.json.get('password', '')

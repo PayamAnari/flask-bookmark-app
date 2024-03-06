@@ -4,12 +4,8 @@ template = {
         "title": "Bookmarks API",
         "description": "API for bookmarks",
         "contact": {
-            "responsibleOrganization": "",
-            "responsibleDeveloper": "",
-            "email": "deve@gmail.com",
-            "url": "www.twitter.com/deve",
+            "email": "anari.p62@gmail.com",
         },
-        "termsOfService": "www.twitter.com/deve",
         "version": "1.0"
     },
     "basePath": "/api/v1",  # base bash for blueprint registration

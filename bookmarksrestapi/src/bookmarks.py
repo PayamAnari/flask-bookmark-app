@@ -153,6 +153,8 @@ def delete_bookmark(id):
 @jwt_required()
 def get_stats():
     current_user = get_jwt_identity()
+
+    data = []
     
     items = Bookmark.query.filter_by(user_id=current_user).all()
 
@@ -165,5 +167,6 @@ def get_stats():
        }
 
        data.append(new_link)
+
+    return jsonify({'data':data}), HTTP_200_OK
     
-    return []

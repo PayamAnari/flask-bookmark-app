@@ -4,7 +4,7 @@ from src.auth import auth
 from src.bookmarks import bookmarks
 from src.database import db, Bookmark
 from flask_jwt_extended import JWTManager
-from src.constants.http_status_codes import HTTP_404_NOT_FOUND
+from src.constants.http_status_codes import HTTP_404_NOT_FOUND, HTTP_500_INTERNAL_SERVER_ERROR
 
 def create_app(test_config=None):
 
@@ -50,4 +50,11 @@ def create_app(test_config=None):
             'error': 'Not found'
         }), HTTP_404_NOT_FOUND
       
+    @app.errorhandler(HTTP_500_INTERNAL_SERVER_ERROR)
+    def handle_500(e):
+        return jsonify({
+            'error': 'Internal server error'
+        }), HTTP_404_NOT_FOUND
+
+
     return app

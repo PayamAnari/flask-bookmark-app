@@ -1,0 +1,60 @@
+summary: Create a new bookmark
+description: Create a new bookmark for the authenticated user.
+tags:
+  - Bookmarks
+parameters: []
+requestBody:
+  required: true
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          body:
+            type: string
+            description: The title of the bookmark.
+          url:
+            type: string
+            format: uri
+            description: The URL of the bookmark.
+          description:
+            type: string
+            description: The description of the bookmark.
+        required:
+          - body
+          - url
+responses:
+  '201':
+    description: Bookmark created successfully
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            id:
+              type: integer
+              description: The ID of the created bookmark.
+            url:
+              type: string
+              description: The URL of the created bookmark.
+            short_url:
+              type: string
+              description: The short URL of the created bookmark.
+            visit:
+              type: integer
+              description: The visit count of the created bookmark.
+            body:
+              type: string
+              description: The body of the created bookmark.
+            created_at:
+              type: string
+              format: date-time
+              description: The creation timestamp of the created bookmark.
+            updated_at:
+              type: string
+              format: date-time
+              description: The update timestamp of the created bookmark.
+  '400':
+    description: Invalid request payload
+  '500':
+    description: Internal server error

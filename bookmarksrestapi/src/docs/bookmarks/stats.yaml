@@ -7,6 +7,7 @@ parameters:
   - in: header
     name: Authorization
     required: true
+    description: Bearer token for authentication
 
 responses:
   200:

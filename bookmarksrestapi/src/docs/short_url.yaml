@@ -6,6 +6,7 @@ parameters:
   - in: path
     name: short_url
     required: true
+    description: Short URL to redirect to
 
 responses:
   302:

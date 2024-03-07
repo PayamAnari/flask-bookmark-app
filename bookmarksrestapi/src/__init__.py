@@ -49,7 +49,10 @@ def create_app(test_config=None):
             bookmark.visits = bookmark.visits + 1
             db.session.commit()
 
-            return redirect(bookmark.url)
+            message = "Redirect successful"
+            redirect_url = bookmark.url
+
+            return jsonify({"redirect_url": redirect_url, "message": message}), 302
 
           
 

@@ -1,0 +1,23 @@
+Get all bookmarks
+---
+tags:
+  - Bookmarks
+
+paths:
+  /bookmarks:
+    get:
+      summary: Get all bookmarks
+      description: Retrieve a list of all bookmarks.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Bookmark'
+        '404':
+          description: Not Found
+      tags:
+        - Bookmarks

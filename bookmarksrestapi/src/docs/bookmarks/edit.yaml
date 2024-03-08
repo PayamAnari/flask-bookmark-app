@@ -1,0 +1,78 @@
+Edit a bookmark
+---
+tags:
+  - Bookmarks
+parameters:
+  - in: header
+    name: Authorization
+    required: true
+    description: Bearer token for authentication
+  - in: path
+    name: id
+    required: true
+    description: ID of the bookmark to be edited
+    schema:
+      type: integer
+  - name: body
+    description: The body should contain the bookmark data
+    in: body
+    required: true
+    schema:
+      type: object
+      required:
+        - url
+        - body
+      properties:
+        url:
+          type: string
+          example: https://example.com
+          description: URL of the bookmark
+        body:
+          type: string
+          example: Bookmark description or notes
+          description: Description or notes associated with the bookmark
+responses:
+  200:
+    description: Bookmark updated successfully
+    schema:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: ID of the updated bookmark
+        url:
+          type: string
+          description: URL of the updated bookmark
+        short_url:
+          type: string
+          description: Short URL of the updated bookmark
+        visits:
+          type: integer
+          description: Number of visits to the updated bookmark
+        body:
+          type: string
+          description: Description or notes associated with the updated bookmark
+        created_at:
+          type: string
+          format: date-time
+          description: Timestamp indicating when the updated bookmark was created
+        updated_at:
+          type: string
+          format: date-time
+          description: Timestamp indicating when the updated bookmark was last updated
+  400:
+    description: Bad request - invalid input data
+    schema:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error message indicating the reason for the bad request
+  404:
+    description: Bookmark not found
+    schema:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error message indicating that the bookmark was not found

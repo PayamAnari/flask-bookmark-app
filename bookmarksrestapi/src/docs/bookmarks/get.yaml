@@ -26,3 +26,6 @@ responses:
 
   401:
     description: Fails to get item due to authentication error
+
+  404:
+    description: Bookmark not found

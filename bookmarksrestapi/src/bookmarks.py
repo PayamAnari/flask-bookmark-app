@@ -103,8 +103,8 @@ def get_bookmark(id):
 
 
 @bookmarks.put("/<int:id>")
-@bookmarks.patch("/<int:id>")
 @jwt_required()
+@swag_from('./docs/bookmarks/edit.yaml')
 def edit_bookmark(id):
       current_user = get_jwt_identity()
       bookmark = Bookmark.query.filter_by(user_id=current_user, id=id).first()
@@ -126,16 +126,22 @@ def edit_bookmark(id):
 
       db.session.commit()
   
-      return jsonify({
-          'id': bookmark.id,
-          'url': bookmark.url,
-          'short_url': bookmark.short_url,
-          'visit': bookmark.visits,
-          'body': bookmark.body,
-          'created_at': bookmark.created_at,
-          'updated_at': bookmark.updated_at,
-      }), HTTP_200_OK
+      response_data = {
+         'id': bookmark.id,
+         'url': bookmark.url,
+         'short_url': bookmark.short_url,
+         'visit': bookmark.visits,
+         'body': bookmark.body,
+         'created_at': bookmark.created_at,
+         'updated_at': bookmark.updated_at,
+        }
+      response_message = {
+          'message': 'Bookmark edited successfully',
+       }
         
+      return jsonify({'data': response_data, 'message': response_message}), HTTP_200_OK
+
+
 
 @bookmarks.delete("/<int:id>")
 @jwt_required()

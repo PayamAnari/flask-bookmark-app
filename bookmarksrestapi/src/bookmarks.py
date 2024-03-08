@@ -9,13 +9,12 @@ from flasgger import swag_from
 bookmarks = Blueprint("bookmarks", __name__, url_prefix="/api/v1/bookmarks")
 
 
-@bookmarks.route('/', methods=['POST', 'GET'])
+@bookmarks.post('/')
 @jwt_required()
 @swag_from("./docs/bookmarks/create.yaml")
 def handle_bookmarks():
-    current_user = get_jwt_identity()
+        current_user = get_jwt_identity()
 
-    if request.method == 'POST':
 
         body = request.get_json().get('body', '')
         url = request.get_json().get('url', '')
@@ -44,7 +43,14 @@ def handle_bookmarks():
             'updated_at': bookmark.updated_at,
         }), HTTP_201_CREATED
 
-    else:
+    
+
+@bookmarks.get("/")
+@jwt_required()
+@swag_from('./docs/bookmarks/get_all.yaml')
+def get_all_bookmarks():
+        current_user = get_jwt_identity()
+
         page = request.args.get('page', 1, type=int)
         per_page = request.args.get('per_page', 5, type=int)
 

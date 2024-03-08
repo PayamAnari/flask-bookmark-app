@@ -33,7 +33,7 @@ def handle_bookmarks():
         db.session.add(bookmark)
         db.session.commit()
 
-        return jsonify({
+        response_data = {
             'id': bookmark.id,
             'url': bookmark.url,
             'short_url': bookmark.short_url,
@@ -41,7 +41,13 @@ def handle_bookmarks():
             'body': bookmark.body,
             'created_at': bookmark.created_at,
             'updated_at': bookmark.updated_at,
-        }), HTTP_201_CREATED
+        }
+
+        response_message = {
+            'message': 'Bookmark created successfully',
+        }
+
+        return jsonify({'data': response_data, 'message': response_message}), HTTP_201_CREATED
 
     
 

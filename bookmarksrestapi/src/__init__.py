@@ -1,4 +1,5 @@
-from flask import Flask, redirect, jsonify
+from flask.json import jsonify
+from flask import Flask
 import os
 from src.auth import auth
 from src.bookmarks import bookmarks
@@ -24,7 +25,7 @@ def create_app(test_config=None):
              JWT_ACCESS_TOKEN_EXPIRES = 3600,
 
              SWAGGER = {
-                  "title": "Bookmarks REST API",
+                  "title": "Bookmarks API",
                   "uiversion": 3
              }
         )
@@ -40,7 +41,7 @@ def create_app(test_config=None):
     app.register_blueprint(auth)
     app.register_blueprint(bookmarks)
 
-    Swagger(app, config=swagger_config, template=template)
+    Swagger(app, config = swagger_config, template = template)
 
     @app.get("/<short_url>")
     @swag_from('./docs/short_url.yaml')

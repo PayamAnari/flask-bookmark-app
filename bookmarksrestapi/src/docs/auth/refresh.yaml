@@ -1,0 +1,41 @@
+Refresh User's Token
+---
+tags:
+  - Authentication
+parameters:
+  - in: header
+    name: Authorization
+    required: true
+    description: Bearer token for authentication
+    type: string
+responses:
+  200:
+    description: OK
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            token:
+              type: string
+              description: New token
+  401:
+    description: Unauthorized
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+              description: Unauthorized
+  500:
+    description: Internal Server Error
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+              description: Internal Server Error

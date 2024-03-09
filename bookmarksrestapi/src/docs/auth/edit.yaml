@@ -24,10 +24,11 @@ parameters:
         - 'username'
       properties:
         email:
-          type: 'email'
+          type: 'string'
+          format: 'email'
           example: 'example@example.com'
         username:
-          type: 'username'
+          type: 'string'
           example: 'usernamex'
 responses:
   200:

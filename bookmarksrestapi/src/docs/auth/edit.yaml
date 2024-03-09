@@ -3,6 +3,11 @@ User editing
 tags:
   - Authentication
 parameters:
+  - in: path
+    name: id
+    required: true
+    type: integer
+    description: ID of the user to edit
   - name: Authorization
     in: header
     description: The user's token
@@ -26,7 +31,7 @@ parameters:
           example: 'usernamex'
 responses:
   200:
-    description: When a user edited successfully
+    description: User updated successfully
 
   400:
     description: Fails to Register due to bad request data
@@ -35,4 +40,7 @@ responses:
     description: Unauthorized access
 
   409:
-    description: Email already exists
+    description: Conflict - Email or username already exists
+
+  500:
+    description: Internal Server Error

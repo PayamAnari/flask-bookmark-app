@@ -1,6 +1,6 @@
 from flask import Blueprint, request,jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
-from src.constants.http_status_codes import HTTP_400_BAD_REQUEST, HTTP_409_CONFLICT, HTTP_201_CREATED, HTTP_401_UNAUTHORIZED, HTTP_200_OK
+from src.constants.http_status_codes import HTTP_400_BAD_REQUEST, HTTP_409_CONFLICT, HTTP_201_CREATED, HTTP_401_UNAUTHORIZED, HTTP_200_OK, HTTP_404_NOT_FOUND
 import validators
 from src.database import User, db
 from flask_jwt_extended import jwt_required, create_access_token, create_refresh_token, get_jwt_identity
@@ -91,20 +91,27 @@ def me():
     }), HTTP_200_OK
     
 
-@auth.put("edit")
+@auth.put("/<int:id>")
 @jwt_required()
 @swag_from('./docs/auth/edit.yaml')
-def edit_user():
-    user_id = get_jwt_identity()
-    user = User.query.filter_by(id = user_id).first()
+def edit_user(id):
+    current_user_id = get_jwt_identity()
+    user = User.query.filter_by(id = current_user_id).first()
+
+    if user is None:
+        return jsonify({"error": "User not found"}), HTTP_404_NOT_FOUND
+    
+    if id != current_user_id:
+        return jsonify({"error": "You can only edit your own account"}), HTTP_401_UNAUTHORIZED
 
     username = request.json.get('username', user.username)
     email = request.json.get('email', user.email)
 
-    if User.query.filter_by(email=email).first() is not None:
+
+    if email != user.email and User.query.filter_by(email=email).first() is not None:
         return jsonify({"error": "Email already exists"}), HTTP_409_CONFLICT
     
-    if User.query.filter_by(username=username).first() is not None:
+    if username != user.username and User.query.filter_by(username=username).first() is not None:
         return jsonify({"error": "Username already exists"}), HTTP_409_CONFLICT
 
     user.username = username

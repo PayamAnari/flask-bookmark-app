@@ -1,6 +1,6 @@
 User delete
 ---
-tag:
+tags:
   - Authentication
 parameters:
   - in: path

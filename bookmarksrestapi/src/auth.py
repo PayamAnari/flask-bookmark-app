@@ -103,28 +103,68 @@ def edit_user(id):
     
     if id != current_user_id:
         return jsonify({"error": "You can only edit your own account"}), HTTP_401_UNAUTHORIZED
+    
 
     username = request.json.get('username', user.username)
     email = request.json.get('email', user.email)
+    password = request.json.get('password', '')
 
 
     if email != user.email and User.query.filter_by(email=email).first() is not None:
         return jsonify({"error": "Email already exists"}), HTTP_409_CONFLICT
     
+    if not validators.email(email):
+        return jsonify({"error": "Invalid email"}), HTTP_400_BAD_REQUEST
+    
     if username != user.username and User.query.filter_by(username=username).first() is not None:
         return jsonify({"error": "Username already exists"}), HTTP_409_CONFLICT
+    
+    if not username.isalnum() or " " in username:
+        return jsonify({"error": "Username should be alphanumeric, also no spaces"}), HTTP_400_BAD_REQUEST
+    
+    if len(password) < 6:
+        return jsonify({"error": "Password is too short"}), HTTP_400_BAD_REQUEST
+    
+    if len(username) < 3:
+        return jsonify({"error": "Username is too short"}), HTTP_400_BAD_REQUEST
 
     user.username = username
     user.email = email
+    user.password = generate_password_hash(password)
     db.session.commit()
 
     return jsonify({
         "message": "User updated successfully",
         "user": {
             "username": user.username,
-            "email": user.email
+            "email": user.email,
+            "password": user.password,
+            "id": user.id,
+            "updated_at": user.updated_at
         }
     }), HTTP_200_OK
+
+
+@auth.delete("/<int:id>")
+@jwt_required()
+@swag_from('./docs/auth/delete.yaml')
+def delete_user(id):
+    current_user_id = get_jwt_identity()
+    user = User.query.filter_by(id = current_user_id).first()
+
+    if user is None:
+        return jsonify({"error": "User not found"}), HTTP_404_NOT_FOUND
+    
+    if id != current_user_id:
+        return jsonify({"error": "You can only delete your own account"}), HTTP_401_UNAUTHORIZED
+    
+    db.session.delete(user)
+    db.session.commit()
+
+    return jsonify({
+        "message": "User deleted successfully"
+    }), HTTP_200_OK
+
 
 
 

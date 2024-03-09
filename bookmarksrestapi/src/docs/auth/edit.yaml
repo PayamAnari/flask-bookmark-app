@@ -22,6 +22,7 @@ parameters:
       required:
         - 'email'
         - 'username'
+        - 'password'
       properties:
         email:
           type: 'string'
@@ -30,6 +31,9 @@ parameters:
         username:
           type: 'string'
           example: 'usernamex'
+        password:
+          type: 'string'
+          example: 'yourpassword'
 responses:
   200:
     description: User updated successfully

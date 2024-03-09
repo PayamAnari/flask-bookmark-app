@@ -1,0 +1,38 @@
+User editing
+---
+tags:
+  - Authentication
+parameters:
+  - name: Authorization
+    in: header
+    description: The user's token
+    required: true
+    type: string
+  - name: body
+    description: The body should contain the user Registration data
+    in: body
+    required: true
+    schema:
+      type: object
+      required:
+        - 'email'
+        - 'username'
+      properties:
+        email:
+          type: 'email'
+          example: 'example@example.com'
+        username:
+          type: 'username'
+          example: 'usernamex'
+responses:
+  200:
+    description: When a user edited successfully
+
+  400:
+    description: Fails to Register due to bad request data
+
+  401:
+    description: Unauthorized access
+
+  409:
+    description: Email already exists

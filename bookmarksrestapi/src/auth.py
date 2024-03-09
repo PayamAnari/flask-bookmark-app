@@ -91,6 +91,35 @@ def me():
     }), HTTP_200_OK
     
 
+@auth.put("edit")
+@jwt_required()
+def edit_user():
+    user_id = get_jwt_identity()
+    user = User.query.filter_by(id = user_id).first()
+
+    username = request.json.get('username', user.username)
+    email = request.json.get('email', user.email)
+
+    if User.query.filter_by(email=email).first() is not None:
+        return jsonify({"error": "Email already exists"}), HTTP_409_CONFLICT
+    
+    if User.query.filter_by(username=username).first() is not None:
+        return jsonify({"error": "Username already exists"}), HTTP_409_CONFLICT
+
+    user.username = username
+    user.email = email
+    db.session.commit()
+
+    return jsonify({
+        "message": "User updated successfully",
+        "user": {
+            "username": user.username,
+            "email": user.email
+        }
+    }), HTTP_200_OK
+
+
+
 @auth.post("/token/refresh")
 @jwt_required(refresh = True)
 @swag_from('./docs/auth/refresh.yaml')

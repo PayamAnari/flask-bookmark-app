@@ -1,61 +1,76 @@
-from flask import Blueprint, request,jsonify
+from flask import Blueprint, request, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
-from src.constants.http_status_codes import HTTP_400_BAD_REQUEST, HTTP_409_CONFLICT, HTTP_201_CREATED, HTTP_401_UNAUTHORIZED, HTTP_200_OK, HTTP_404_NOT_FOUND
+from src.constants.http_status_codes import (
+    HTTP_400_BAD_REQUEST,
+    HTTP_409_CONFLICT,
+    HTTP_201_CREATED,
+    HTTP_401_UNAUTHORIZED,
+    HTTP_200_OK,
+    HTTP_404_NOT_FOUND,
+)
 import validators
 from src.database import User, db
-from flask_jwt_extended import jwt_required, create_access_token, create_refresh_token, get_jwt_identity
+from flask_jwt_extended import (
+    jwt_required,
+    create_access_token,
+    create_refresh_token,
+    get_jwt_identity,
+)
 from flasgger import swag_from
 
 auth = Blueprint("auth", __name__, url_prefix="/api/v1/auth")
 
+
 @auth.post("/register")
-@swag_from('./docs/auth/register.yaml')
+@swag_from("./docs/auth/register.yaml")
 def register():
-    username = request.json['username']
-    email = request.json['email']
-    password = request.json['password']
-   
+    username = request.json["username"]
+    email = request.json["email"]
+    password = request.json["password"]
+
     if len(password) < 6:
         return jsonify({"error": "Password is too short"}), HTTP_400_BAD_REQUEST
-   
+
     if len(username) < 3:
         return jsonify({"error": "Username is too short"}), HTTP_400_BAD_REQUEST
-    
-    if not username.isalnum() or " " in username:
-        return jsonify({"error": "Username should be alphanumeric, also no spaces"}), HTTP_400_BAD_REQUEST
 
+    if not username.isalnum() or " " in username:
+        return (
+            jsonify({"error": "Username should be alphanumeric, also no spaces"}),
+            HTTP_400_BAD_REQUEST,
+        )
 
     if not validators.email(email):
         return jsonify({"error": "Invalid email"}), HTTP_400_BAD_REQUEST
 
     if User.query.filter_by(email=email).first() is not None:
         return jsonify({"error": "Email already exists"}), HTTP_409_CONFLICT
-    
+
     if User.query.filter_by(username=username).first() is not None:
         return jsonify({"error": "Username already exists"}), HTTP_409_CONFLICT
 
+    pwd_hash = generate_password_hash(password)
 
-
-    pwd_hash=generate_password_hash(password)
-
-    user=User(username=username, password=pwd_hash, email=email)
+    user = User(username=username, password=pwd_hash, email=email)
     db.session.add(user)
     db.session.commit()
 
-    return jsonify({
-      "message": "User created successfully",
-      "user": {
-        "username": username,
-        "email": email
-      }
-    }),HTTP_201_CREATED
+    return (
+        jsonify(
+            {
+                "message": "User created successfully",
+                "user": {"username": username, "email": email},
+            }
+        ),
+        HTTP_201_CREATED,
+    )
 
 
 @auth.post("/login")
-@swag_from('./docs/auth/login.yaml')
+@swag_from("./docs/auth/login.yaml")
 def login():
-    email = request.json.get('email', '')
-    password = request.json.get('password', '')
+    email = request.json.get("email", "")
+    password = request.json.get("password", "")
 
     user = User.query.filter_by(email=email).first()
 
@@ -66,65 +81,75 @@ def login():
             refresh = create_refresh_token(identity=user.id)
             access = create_access_token(identity=user.id)
 
-            return jsonify({
-                "message": "User logged in successfully",
-                "user": {
-                    "refresh": refresh,
-                    "access": access,
-                    "username": user.username,
-                    "email": user.email
-                }
-            }), HTTP_200_OK
+            return (
+                jsonify(
+                    {
+                        "message": "User logged in successfully",
+                        "user": {
+                            "refresh": refresh,
+                            "access": access,
+                            "username": user.username,
+                            "email": user.email,
+                        },
+                    }
+                ),
+                HTTP_200_OK,
+            )
 
     return jsonify({"error": "Wrong credentials"}), HTTP_401_UNAUTHORIZED
+
 
 @auth.get("/me")
 @jwt_required()
 def me():
     user_id = get_jwt_identity()
 
-    user = User.query.filter_by(id = user_id).first()
+    user = User.query.filter_by(id=user_id).first()
 
-    return jsonify({
-            "username": user.username,
-            "email": user.email
-    }), HTTP_200_OK
-    
+    return jsonify({"username": user.username, "email": user.email}), HTTP_200_OK
+
 
 @auth.put("/<int:id>")
 @jwt_required()
-@swag_from('./docs/auth/edit.yaml')
+@swag_from("./docs/auth/edit.yaml")
 def edit_user(id):
     current_user_id = get_jwt_identity()
-    user = User.query.filter_by(id = current_user_id).first()
+    user = User.query.filter_by(id=current_user_id).first()
 
     if user is None:
         return jsonify({"error": "User not found"}), HTTP_404_NOT_FOUND
-    
+
     if id != current_user_id:
-        return jsonify({"error": "You can only edit your own account"}), HTTP_401_UNAUTHORIZED
-    
+        return (
+            jsonify({"error": "You can only edit your own account"}),
+            HTTP_401_UNAUTHORIZED,
+        )
 
-    username = request.json.get('username', user.username)
-    email = request.json.get('email', user.email)
-    password = request.json.get('password', '')
-
+    username = request.json.get("username", user.username)
+    email = request.json.get("email", user.email)
+    password = request.json.get("password", "")
 
     if email != user.email and User.query.filter_by(email=email).first() is not None:
         return jsonify({"error": "Email already exists"}), HTTP_409_CONFLICT
-    
+
     if not validators.email(email):
         return jsonify({"error": "Invalid email"}), HTTP_400_BAD_REQUEST
-    
-    if username != user.username and User.query.filter_by(username=username).first() is not None:
+
+    if (
+        username != user.username
+        and User.query.filter_by(username=username).first() is not None
+    ):
         return jsonify({"error": "Username already exists"}), HTTP_409_CONFLICT
-    
+
     if not username.isalnum() or " " in username:
-        return jsonify({"error": "Username should be alphanumeric, also no spaces"}), HTTP_400_BAD_REQUEST
-    
+        return (
+            jsonify({"error": "Username should be alphanumeric, also no spaces"}),
+            HTTP_400_BAD_REQUEST,
+        )
+
     if len(password) < 6:
         return jsonify({"error": "Password is too short"}), HTTP_400_BAD_REQUEST
-    
+
     if len(username) < 3:
         return jsonify({"error": "Username is too short"}), HTTP_400_BAD_REQUEST
 
@@ -133,49 +158,53 @@ def edit_user(id):
     user.password = generate_password_hash(password)
     db.session.commit()
 
-    return jsonify({
-        "message": "User updated successfully",
-        "user": {
-            "username": user.username,
-            "email": user.email,
-            "password": user.password,
-            "id": user.id,
-            "updated_at": user.updated_at
-        }
-    }), HTTP_200_OK
+    return (
+        jsonify(
+            {
+                "message": "User updated successfully",
+                "user": {
+                    "username": user.username,
+                    "email": user.email,
+                    "password": user.password,
+                    "id": user.id,
+                    "updated_at": user.updated_at,
+                },
+            }
+        ),
+        HTTP_200_OK,
+    )
 
 
 @auth.delete("/<int:id>")
 @jwt_required()
-@swag_from('./docs/auth/delete.yaml')
+@swag_from("./docs/auth/delete.yaml")
 def delete_user(id):
     current_user_id = get_jwt_identity()
-    user = User.query.filter_by(id = current_user_id).first()
+    user = User.query.filter_by(id=current_user_id).first()
 
     if user is None:
         return jsonify({"error": "User not found"}), HTTP_404_NOT_FOUND
-    
+
     if id != current_user_id:
-        return jsonify({"error": "You can only delete your own account"}), HTTP_401_UNAUTHORIZED
-    
+        return (
+            jsonify({"error": "You can only delete your own account"}),
+            HTTP_401_UNAUTHORIZED,
+        )
+
     db.session.delete(user)
     db.session.commit()
 
-    return jsonify({
-        "message": "User deleted successfully"
-    }), HTTP_200_OK
-
-
+    return jsonify({"message": "User deleted successfully"}), HTTP_200_OK
 
 
 @auth.post("/token/refresh")
-@jwt_required(refresh = True)
-@swag_from('./docs/auth/refresh.yaml')
+@jwt_required(refresh=True)
+@swag_from("./docs/auth/refresh.yaml")
 def refresh_users_token():
     identity = get_jwt_identity()
     access = create_access_token(identity=identity)
-    
-    return jsonify({
-        "message": "Refresh token created successfully",
-        "access": access
-    }), HTTP_200_OK
+
+    return (
+        jsonify({"message": "Refresh token created successfully", "access": access}),
+        HTTP_200_OK,
+    )

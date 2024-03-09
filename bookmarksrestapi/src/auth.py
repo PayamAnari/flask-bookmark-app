@@ -93,6 +93,7 @@ def me():
 
 @auth.put("edit")
 @jwt_required()
+@swag_from('./docs/auth/edit.yaml')
 def edit_user():
     user_id = get_jwt_identity()
     user = User.query.filter_by(id = user_id).first()

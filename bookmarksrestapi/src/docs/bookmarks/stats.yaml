@@ -2,13 +2,6 @@ Get stats about bookmarks
 ---
 tags:
   - Bookmarks
-
-parameters:
-  - in: header
-    name: Authorization
-    required: true
-    description: Bearer token for authentication
-
 responses:
   200:
     description: Bookmarks stats

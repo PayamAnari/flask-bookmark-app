@@ -17,6 +17,8 @@ from flask_jwt_extended import (
     get_jwt_identity,
 )
 from flasgger import swag_from
+from src.database import Bookmark
+
 
 auth = Blueprint("auth", __name__, url_prefix="/api/v1/auth")
 
@@ -191,10 +193,17 @@ def delete_user(id):
             HTTP_401_UNAUTHORIZED,
         )
 
+    bookmarks = Bookmark.query.filter_by(user_id=current_user_id).all()
+    for bookmark in bookmarks:
+        db.session.delete(bookmark)
+
     db.session.delete(user)
     db.session.commit()
 
-    return jsonify({"message": "User deleted successfully"}), HTTP_200_OK
+    return (
+        jsonify({"message": "User and associated bookmarks deleted successfully"}),
+        HTTP_200_OK,
+    )
 
 
 @auth.post("/token/refresh")

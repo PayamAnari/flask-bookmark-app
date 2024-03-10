@@ -165,8 +165,8 @@ flask run
 ### - Get all Bookmarks
 ### Parameters:
 ```
-- **page (optional):** Page number to retrieve (default is 1).
-- **per_page (optional):** Number of bookmarks per page (default is 5).
+page (optional): Page number to retrieve (default is 1).
+per_page (optional): Number of bookmarks per page (default is 5).
 ```
 
 ### Response:

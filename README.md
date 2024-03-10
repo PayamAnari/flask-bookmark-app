@@ -161,7 +161,49 @@ flask run
 }
 
 ```
+### - Get all Bookmark
+### Parameters:
+```
+- **page (optional):** Page number to retrieve (default is 1).
+- **per_page (optional):** Number of bookmarks per page (default is 5).
+```
 
+### Response:
+
+```
+{
+  "data": [
+    {
+      "id": 1,
+      "url": "https://www.example.com",
+      "short_url": "qW6",
+      "visit": 0,
+      "body": "This is an example bookmark",
+      "created_at": "2024-03-09T12:00:00Z",
+      "updated_at": "2024-03-09T12:00:00Z"
+    },
+    {
+      "id": 2,
+      "url": "https://www.anotherexample.com",
+      "short_url": "aB7",
+      "visit": 0,
+      "body": "This is another example bookmark",
+      "created_at": "2024-03-10T12:00:00Z",
+      "updated_at": "2024-03-10T12:00:00Z"
+    }
+  ],
+  "meta": {
+    "page": 1,
+    "pages": 2,
+    "total_count": 10,
+    "prev_page": null,
+    "next_page": 2,
+    "has_next": true,
+    "has_prev": false
+  }
+}
+
+```
 ---
 
 ## License

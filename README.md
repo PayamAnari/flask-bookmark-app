@@ -38,6 +38,7 @@ This Flask application provides a RESTful API for managing bookmarks. It allows 
 - **Bookmark Management:** Users can create, edit, delete, and view their bookmarks. Each bookmark includes details such as URL, description, creation date, and number of visits.
 - **Short URL Generation:** Short URLs are automatically generated for each bookmark to provide easy access.
 - **Swagger Documentation:** API endpoints are documented using Swagger UI, making it easy to understand and use the API.
+- **Pagination Support:** The API supports pagination for endpoints that return multiple items, allowing users to navigate through large sets of data with ease.
 
 <p align="center">
   <img 
@@ -161,7 +162,7 @@ flask run
 }
 
 ```
-### - Get all Bookmark
+### - Get all Bookmarks
 ### Parameters:
 ```
 - **page (optional):** Page number to retrieve (default is 1).

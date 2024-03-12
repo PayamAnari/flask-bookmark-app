@@ -94,7 +94,7 @@ This Flask application provides a RESTful API for managing bookmarks. It allows 
 | *PUT* | ```/api/v1/bookmarks/<bookmark_id>``` | _Edit Bookmark_| _All users_| Authentication |
 | *DELETE* | ```/api/v1/bookmarks/<bookmark_id>``` | _Delete Bookmark_| _All users_| Authentication |
 | *GET* | ```/api/v1/bookmarks/stats/``` | _Get Bookmark Statistics_| _All users_| Authentication |
-| *GET* | ```/api/v1/<short_url>/``` | _Redirect to a Short URL_| _All users_|
+| *GET* | ```/api/v1/<short_url>/``` | _Redirect to a Short URL_| _All users_| - |
 
 
 ---

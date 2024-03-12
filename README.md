@@ -82,7 +82,7 @@ This Flask application provides a RESTful API for managing bookmarks. It allows 
 | *GET* | ```/api/v1/auth/me/``` | _Get User Details_| _All users_| Authentication |
 | *PUT* | ```/api/v1/auth/<user_id>/``` | _Update User Details_| _All users_|  Authentication |
 | *DELETE* | ```/api/v1/auth/<user_id>/``` | _Delete User_| _All users_|  Authentication |
-| *POST* | ```/api/v1/auth/token/refresh/``` | _Refresh User's Token_| _All users_|
+| *POST* | ```/api/v1/auth/token/refresh/``` | _Refresh User's Token_| _All users_|  Authentication |
 
 
 | METHOD | ROUTE | FUNCTIONALITY |ACCESS|

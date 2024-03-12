@@ -74,20 +74,22 @@ This Flask application provides a RESTful API for managing bookmarks. It allows 
 
 ## API Endpoints
 
-- **User Registration**: `/api/v1/auth/register` (POST)
-- **User Login**: `/api/v1/auth/login` (POST)
-- **Get User Details**: `/api/v1/auth/me` (GET)
-- **Update User Details**: `/api/v1/auth/<user_id>` (PUT)
-- **Delete User**: `/api/v1/auth/<user_id>` (DELETE)
-- **Refresh User's Token**: `/api/v1/auth/token/refresh` (POST)
+| METHOD | ROUTE | FUNCTIONALITY |ACCESS|
+| ------- | ----- | ------------- | ------------- |
+| *POST* | ```/api/v1/auth/register/``` | _Register New User_| _All users_|
+| *POST* | ```/api/v1/auth/login/``` | _Login User_| _All users_|
+| *GET* | ```/api/v1/auth/me/``` | _Get User Details_| _All users_|
+| *PUT* | ```/api/v1/auth/<user_id>/``` | _Update User Details_| _All users_|
+| *DELETE* | ```/api/v1/auth/<user_id>/``` | _Delete User_| _All users_|
+| *POST* | ```/api/v1/auth/token/refresh/``` | _Refresh User's Token_| _All users_|
+| *POST* | ```/api/v1/bookmarks/``` | _Create Bookmark_| _All users_|
+| *GET* | ```/api/v1/bookmarks/``` | _GEt All Bookmarks_| _All users_|
+| *GET* | ```/api/v1/bookmarks/<bookmark_id>/``` | _Get Bookmark By Id_| _All users_|
+| *PUT* | ```/api/v1/bookmarks/<bookmark_id>``` | _Edit Bookmark_| _All users_|
+| *DELETE* | ```/api/v1/bookmarks/<bookmark_id>``` | _Delete Bookmark_| _All users_|
+| *GET* | ```/api/v1/bookmarks/stats/``` | _Get Bookmark Statistics_| _All users_|
+| *GET* | ```/api/v1/<short_url>/``` | _Redirect to a Short URL_| _All users_|
 
-- **Create Bookmark**: `/api/v1/bookmarks/` (POST)
-- **Get All Bookmarks**: `/api/v1/bookmarks/` (GET)
-- **Get Bookmark by ID**: `/api/v1/bookmarks/<bookmark_id>` (GET)
-- **Edit Bookmark**: `/api/v1/bookmarks/<bookmark_id>` (PUT)
-- **Delete Bookmark**: `/api/v1/bookmarks/<bookmark_id>` (DELETE)
-- **Get Bookmark Statistics**: `/api/v1/bookmarks/stats` (GET)
-- **Redirect to a Short URL**: `/api/v1/<short_url>` (GET)
 
 ---
 

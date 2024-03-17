@@ -106,14 +106,19 @@ This Flask application provides a RESTful API for managing bookmarks. It allows 
 git clone https://github.com/your-username/flask-bookmark-api.git
 
 ```
-2- **Install dependencies:**
+2- **Create your virtualenv and activate it:**
+```
+Pipenv or virtualenv
+
+```
+3- **Install dependencies:**
 ```
 pip install -r requirements.txt
 
 ```
--3 **Set environment variables for configuration** (e.g., SECRET_KEY, SQLALCHEMY_DB_URI, JWT_SECRET_KEY).
+4- **Set environment variables for configuration** (e.g., SECRET_KEY, SQLALCHEMY_DB_URI, JWT_SECRET_KEY).
 
--4 **Run the application:**
+5- **Run the application:**
 ```
 flask run
 ```
